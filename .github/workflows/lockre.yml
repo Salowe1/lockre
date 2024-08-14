@@ -23,30 +23,28 @@ jobs:
         run: pod repo update
         working-directory: ios
 
-      - name: Clean old Pods and Derived Data
+      - name: Clean old Pods, Podfile.lock, and Derived Data
         run: |
           rm -rf ios/Pods
           rm -rf ios/Podfile.lock
           rm -rf ~/Library/Developer/Xcode/DerivedData
+          flutter clean  # Clean Flutter's build cache
+          flutter pub get  # Re-fetch dependencies
 
       - name: Install CocoaPods dependencies
-        run: pod install --verbose
+        run: |
+          pod install --verbose
+          pod repo update  # Update the CocoaPods repo to ensure latest versions are fetched
         working-directory: ios
 
-      - name: Build iOS Release
-        run: flutter build ios --release --no-codesign
+      - name: Ensure Xcode command line tools are set
+        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
 
-      - name: Prepare Payload Directory
-        run: mkdir -p build/ios/iphoneos/Payload
-
-      - name: Move App to Payload
-        run: mv build/ios/iphoneos/Runner.app build/ios/iphoneos/Payload/
-        if: success()
-
-      - name: Zip the output IPA
-        run: zip -qq -r -9 FlutterIpaExport.ipa Payload
-        working-directory: build/ios/iphoneos
-
+      - name: Regenerate `GeneratedPluginRegistrant.m`
+        run: |
+          flutter pub get
+          flutter clean
+          flutter pub run build_runner build  # Force regeneration of the `GeneratedPluginRegistrant.m`
       - name: Upload IPA to GitHub Release
         uses: svenstaro/upload-release-action@v2
         with:
@@ -54,4 +52,4 @@ jobs:
           file: build/ios/iphoneos/FlutterIpaExport.ipa
           tag: v1.0
           overwrite: true
-          body: "Congrats"
+          body: "Congrats on successfully building the iOS IPA!"
