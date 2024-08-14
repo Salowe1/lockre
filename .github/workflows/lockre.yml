@@ -15,6 +15,9 @@ jobs:
         with:
           channel: 'stable'
           architecture: x64
+          
+      - name: Add `build_runner` Package
+        run: dart pub add dev:build_runner    
 
       - name: Install Dependencies
         run: flutter pub get
