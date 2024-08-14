@@ -19,10 +19,6 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get -v
 
-      - name: Ensure CocoaPods is up-to-date
-        run: pod repo update
-        working-directory: ios
-
       - name: Clean old Pods, Podfile.lock, and Derived Data
         run: |
           rm -rf ios/Pods
@@ -31,20 +27,37 @@ jobs:
           flutter clean  # Clean Flutter's build cache
           flutter pub get  # Re-fetch dependencies
 
+      - name: Ensure CocoaPods is up-to-date
+        run: pod repo update
+        working-directory: ios
+
       - name: Install CocoaPods dependencies
         run: |
           pod install --verbose
           pod repo update  # Update the CocoaPods repo to ensure latest versions are fetched
         working-directory: ios
 
-      - name: Ensure Xcode command line tools are set
-        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
-
       - name: Regenerate `GeneratedPluginRegistrant.m`
         run: |
           flutter pub get
           flutter clean
           flutter pub run build_runner build  # Force regeneration of the `GeneratedPluginRegistrant.m`
+
+      - name: Build iOS IPA
+        run: |
+          xcodebuild -workspace ios/Runner.xcworkspace \
+                     -scheme Runner \
+                     -configuration Release \
+                     -archivePath build/ios/archive/Runner.xcarchive \
+                     archive
+
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+                     -archivePath build/ios/archive/Runner.xcarchive \
+                     -exportPath build/ios/iphoneos \
+                     -exportOptionsPlist ios/exportOptions.plist
+
       - name: Upload IPA to GitHub Release
         uses: svenstaro/upload-release-action@v2
         with:
