@@ -27,12 +27,7 @@ jobs:
         working-directory: ios
 
       - name: Clean old Pods, Podfile.lock, and Derived Data
-        run: |
-          rm -rf ios/Pods
-          rm ios/Podfile.lock
-          rm -rf ~/Library/Developer/Xcode/DerivedData
-          flutter clean
-        working-directory: ios
+      
 
       - name: Install CocoaPods dependencies
         run: |
