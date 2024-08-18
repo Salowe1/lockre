@@ -171,22 +171,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
-  device_info_plus:
-    dependency: "direct main"
-    description:
-      name: device_info_plus
-      sha256: "93429694c9253d2871b3af80cf11b3cbb5c65660d402ed7bf69854ce4a089f82"
-      url: "https://pub.dev"
-    source: hosted
-    version: "10.1.1"
-  device_info_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: device_info_plus_platform_interface
-      sha256: "282d3cf731045a2feb66abfe61bbc40870ae50a3ed10a4d3d217556c35c8c2ba"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.0.1"
+  
   dots_indicator:
     dependency: transitive
     description:
@@ -195,14 +180,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
-  edge_detection:
-    dependency: transitive
-    description:
-      name: edge_detection
-      sha256: "515bc8b797382f567fd27f2ac972b804077e616865b071a8f6abb568c6aaac4e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.3"
+ 
   email_validator:
     dependency: "direct main"
     description:
