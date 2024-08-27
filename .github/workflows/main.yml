@@ -22,13 +22,13 @@ jobs:
           dart pub add dev:build_runner
           flutter pub get
 
-      - name: Ensure CocoaPods is up-to-date
+      - name: Ensure CocoaPods is Up-to-Date
         run: |
           sudo gem install cocoapods
           pod repo update
         working-directory: ios
 
-      - name: Install and Clean CocoaPods
+      - name: Install CocoaPods Dependencies
         run: |
           rm -rf Pods Podfile.lock
           pod install --repo-update
@@ -38,6 +38,13 @@ jobs:
         run: |
           flutter pub get
           flutter pub run build_runner build --delete-conflicting-outputs
+
+      - name: Check Flutter XCFramework
+        run: |
+          if [ ! -d "$FLUTTER_ROOT/bin/cache/artifacts/engine/ios/Flutter.xcframework" ]; then
+            echo "Flutter.xcframework not found. Run 'flutter doctor' for diagnostics."
+            exit 1
+          fi
 
       - name: Build iOS IPA
         run: flutter build ios --release --no-codesign
