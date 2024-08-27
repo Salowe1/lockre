@@ -15,7 +15,7 @@ jobs:
         with:
           channel: 'stable'
           architecture: x64
-          
+
       - name: Add `build_runner` Package
         run: dart pub add dev:build_runner    
 
@@ -60,3 +60,8 @@ jobs:
           tag: v1.0
           overwrite: true
           body: "Congrats"
+
+      - name: Post Build Cleanup
+        run: |
+          rm -rf Payload
+        working-directory: build/ios/iphoneos
